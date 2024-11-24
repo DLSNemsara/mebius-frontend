@@ -2,6 +2,10 @@
 
 This repository contains the frontend code for the Mebius eCommerce project. The project is built using the MERN stack to provide a seamless shopping experience for users.
 
+## Project Status
+
+**Note:** This project is currently under active development.
+
 ## Features
 
 - Responsive design for optimal viewing on all devices

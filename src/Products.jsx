@@ -139,7 +139,7 @@ function Products() {
         </button>
         <button
           onClick={handleSortDescending}
-          className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042]"
+          className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042] transition-transform"
         >
           Sort by Price: Descending
         </button>

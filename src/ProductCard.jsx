@@ -3,10 +3,15 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 function ProductCard(props) {
-  const [num, setNum] = useState(0);
-
+  //updater function
   const handleClick = (e) => {
-    setNum(num + 1);
+    props.handleAddToCart({
+      _id: props._id,
+      name: props.name,
+      price: props.price,
+      image: props.image,
+      description: props.description,
+    });
   };
 
   return (
@@ -17,7 +22,6 @@ function ProductCard(props) {
       <div className="flex items-center justify-between px-4 mt-4">
         <h2 className="text-2xl font-semibold">{props.name}</h2>
         <span className="block text-lg font-medium">${props.price}</span>
-        <p>{num}</p>
       </div>
       <div className="px-4 mt-2">
         <p className="text-sm">{props.description}</p>

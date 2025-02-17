@@ -2,30 +2,31 @@ import ProductCards from "./ProductCards";
 import Tab from "./Tab";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
-import { getProducts, getCategories } from "./lib/api";
 import { Skeleton } from "./components/ui/skeleton";
+import { useGetCategoriesQuery, useGetProductsQuery } from "@/lib/api";
 
 function Products(props) {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const {
+    data: products,
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+    error: productsError,
+  } = useGetProductsQuery();
+
+  const {
+    data: categories,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+    error: categoriesError,
+  } = useGetCategoriesQuery();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState("ALL");
   const [sortOrder, setSortOrder] = useState(null); // New state for sorting order
-  const [isProductsLoading, setIsProductsLoading] = useState(true);
-  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
-  const [productsError, setProductsError] = useState({
-    isError: false,
-    message: "",
-  });
-  const [categoriesError, setCategoriesError] = useState({
-    isError: false,
-    message: "",
-  });
 
   const filteredProducts =
     selectedCategoryId === "ALL"
-      ? products
-      : products.filter((product) => product.categoryId === selectedCategoryId);
+      ? products ?? []
+      : products.filter((product) => product.categoryId === selectedCategoryId) ?? [];
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortOrder === "asc") return parseFloat(a.price) - parseFloat(b.price);
@@ -45,81 +46,21 @@ function Products(props) {
     setSortOrder("desc");
   };
 
-  // useEffect(() => {
-  //   getProducts()
-  //     .then((productData) => {
-  //       setProducts(productData);
-  //       return getCategories();
-  //     })
-  //     .then((categoryData) => {
-  //       setCategories([{ _id: "ALL", name: "All" }, ...categoryData]);
-  //     })
-  //     .catch((error) => {
-  //       if (error.message.includes("products")) {
-  //         setProductsError({ isError: true, message: error.message });
-  //       } else if (error.message.includes("categories")) {
-  //         setCategoriesError({ isError: true, message: error.message });
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setIsProductsLoading(false);
-  //       setIsCategoriesLoading(false);
-  //     });
-  // }, []);
-
-  useEffect(() => {
-    // Set loading states before fetching data
-    setIsProductsLoading(true);
-    setIsCategoriesLoading(true);
-
-    getProducts()
-      .then((productData) => {
-        setProducts(productData);
-      })
-      .catch((error) => {
-        setProductsError({ isError: true, message: error.message });
-      })
-      .finally(() => {
-        setIsProductsLoading(false);
-      });
-
-    getCategories()
-      .then((categoryData) => {
-        setCategories([{ _id: "ALL", name: "All" }, ...categoryData]);
-      })
-      .catch((error) => {
-        setCategoriesError({ isError: true, message: error.message });
-      })
-      .finally(() => {
-        setIsCategoriesLoading(false);
-      });
-  }, []);
-
   // Display loading spinner while fetching data
   if (isProductsLoading || isCategoriesLoading) {
     return (
       <section className="px-8 py-8">
         <h2 className="text-4xl font-bold">Our Top Products</h2>
         <Separator className="mt-2" />
-        <div className="flex items-center gap-4 mt-4">
-          {isCategoriesLoading ? (
-            <>
-              <Skeleton className="w-24 h-8 rounded-md" />
-              <Skeleton className="w-24 h-8 rounded-md" />
-              <Skeleton className="w-24 h-8 rounded-md" />
-            </>
-          ) : (
-            categories.map((category) => (
-              <Tab
-                key={category._id}
-                _id={category._id}
-                selectedCategoryId={selectedCategoryId}
-                name={category.name}
-                onTabClick={handleTabClick}
-              />
-            ))
-          )}
-        </div>
+      <div className="flex items-center gap-4 mt-4">
+        {isCategoriesLoading && (
+          <>
+            <Skeleton className="w-24 h-8 rounded-md" />
+            <Skeleton className="w-24 h-8 rounded-md" />
+            <Skeleton className="w-24 h-8 rounded-md" />
+          </>
+        )}
+      </div>
 
         <div className="flex gap-4 mt-4">
           {/* Sorting buttons */}
@@ -146,61 +87,12 @@ function Products(props) {
     );
   }
 
-  // if (productsError.isError || categoriesError.isError) {
-  //   return (
-  //     <section className="px-8 py-8">
-  //       <h2 className="text-4xl font-bold">Our Top Products</h2>
-  //       <Separator className="mt-2" />
-  //       <div className="flex items-center gap-4 mt-4">
-  //         {categories.map((category) => (
-  //           <Tab
-  //             key={category._id}
-  //             _id={category._id}
-  //             selectedCategoryId={selectedCategoryId}
-  //             name={category.name}
-  //             onTabClick={handleTabClick}
-  //           />
-  //         ))}
-  //       </div>
-  //       <div className="flex gap-4 mt-4">
-  //         {/* Sorting buttons */}
-  //         <button
-  //           onClick={handleSortAscending}
-  //           className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042]"
-  //         >
-  //           Sort by Price: Ascending
-  //         </button>
-  //         <button
-  //           onClick={handleSortDescending}
-  //           className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042] transition-transform"
-  //         >
-  //           Sort by Price: Descending
-  //         </button>
-  //       </div>
-  //       <div className="mt-4">
-  //         <p className="text-red-500">
-  //           {productsError.message || categoriesError.message}
-  //         </p>
-  //       </div>{" "}
-  //     </section>
-  //   );
-  // }
-  if (productsError.isError || categoriesError.isError) {
+if (isProductsError || isCategoriesError) {
     return (
       <section className="px-8 py-8">
         <h2 className="text-4xl font-bold">Our Top Products</h2>
         <Separator className="mt-2" />
-        <div className="flex items-center gap-4 mt-4">
-          {categories.map((category) => (
-            <Tab
-              key={category._id}
-              _id={category._id}
-              selectedCategoryId={selectedCategoryId}
-              name={category.name}
-              onTabClick={handleTabClick}
-            />
-          ))}
-        </div>
+        <div className="flex items-center gap-4 mt-4"></div>
         <div className="flex gap-4 mt-4">
           {/* Sorting buttons */}
           <button
@@ -216,45 +108,16 @@ function Products(props) {
             Sort by Price: Descending
           </button>
         </div>
-        <div className="mt-4 text-center text-red-500">
+         <div className="mt-4 text-center text-red-500">
           <p className="text-lg font-semibold">
             Oops! Something went wrong while loading the data.
           </p>
-          <p>{productsError.message || categoriesError.message}</p>
-          {/* Retry button */}
-          <button
-            onClick={() => {
-              setIsProductsLoading(true);
-              setIsCategoriesLoading(true);
-              setProductsError({ isError: false, message: "" });
-              setCategoriesError({ isError: false, message: "" });
-              getProducts()
-                .then((productData) => {
-                  setProducts(productData);
-                })
-                .catch((error) => {
-                  setProductsError({ isError: true, message: error.message });
-                })
-                .finally(() => {
-                  setIsProductsLoading(false);
-                });
-
-              getCategories()
-                .then((categoryData) => {
-                  setCategories([{ _id: "ALL", name: "All" }, ...categoryData]);
-                })
-                .catch((error) => {
-                  setCategoriesError({ isError: true, message: error.message });
-                })
-                .finally(() => {
-                  setIsCategoriesLoading(false);
-                });
-            }}
-            className="px-4 py-2 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-500"
-          >
-            Retry
-          </button>
-        </div>
+          <p>
+            {`${productsError?.message || "Something went wrong while loading products."}`}
+            <br />
+            {`${categoriesError?.message || "Something went wrong while loading categories."}`}
+          </p>        
+          </div>
       </section>
     );
   }
@@ -263,8 +126,8 @@ function Products(props) {
     <section className="px-8 py-8">
       <h2 className="text-4xl font-bold">Our Top Products</h2>
       <Separator className="mt-2" />
-      <div className="flex items-center gap-4 mt-4">
-        {categories.map((category) => (
+      <div className="mt-4 flex items-center gap-4">
+        {[...categories, { _id: "ALL", name: "All" }].map((category) => (
           <Tab
             key={category._id}
             _id={category._id}
@@ -289,10 +152,7 @@ function Products(props) {
           Sort by Price: Descending
         </button>
       </div>
-      <ProductCards
-        handleAddToCart={props.handleAddToCart}
-        products={sortedProducts}
-      />
+      <ProductCards products={sortedProducts} />
     </section>
   );
 }

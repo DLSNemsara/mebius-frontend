@@ -1,6 +1,10 @@
-# Mebius
+# Mebius Frontend
 
-This repository contains the frontend code for the Mebius eCommerce project. The project is built using the MERN stack to provide a seamless shopping experience for users.
+This repository contains the frontend code for the **Mebius eCommerce** project. The project is built using the MERN stack to provide a seamless shopping experience for users.
+
+## Project Status
+
+**Note:** This project is currently under active development.
 
 ## Features
 
@@ -12,14 +16,12 @@ This repository contains the frontend code for the Mebius eCommerce project. The
 
 ## Technologies Used
 
-- MongoDB for the database
-- Express.js for the backend framework
-- React.js for building the user interface
-- Node.js for the server environment
-- Redux for state management
-- React Router for navigation
-- Axios for API calls
-- Tailwind CSS for styling
+- **React.js** for the user interface
+- **Redux** for state management
+- **React Router** for navigation
+- **Axios** for API calls
+- **Tailwind CSS** for styling
+- **Vite** for fast development builds
 
 ## Getting Started
 
@@ -27,11 +29,11 @@ To get a local copy up and running, follow these steps:
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/DLSNemsara/ecommerce-storefront.git
+    git clone https://github.com/DLSNemsara/mebius-frontend.git
     ```
 2. Navigate to the project directory:
     ```sh
-    cd ecommerce-storefront
+    cd mebius-frontend
     ```
 3. Install dependencies:
     ```sh
@@ -39,7 +41,7 @@ To get a local copy up and running, follow these steps:
     ```
 4. Start the development server:
     ```sh
-    npm start
+    npm run dev
     ```
 
 ## Contributing

@@ -25,8 +25,10 @@ function Products(props) {
 
   const filteredProducts =
     selectedCategoryId === "ALL"
-      ? products ?? []
-      : products.filter((product) => product.categoryId === selectedCategoryId) ?? [];
+      ? (products ?? [])
+      : (products.filter(
+          (product) => product.categoryId === selectedCategoryId
+        ) ?? []);
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortOrder === "asc") return parseFloat(a.price) - parseFloat(b.price);
@@ -52,15 +54,15 @@ function Products(props) {
       <section className="px-8 py-8">
         <h2 className="text-4xl font-bold">Our Top Products</h2>
         <Separator className="mt-2" />
-      <div className="flex items-center gap-4 mt-4">
-        {isCategoriesLoading && (
-          <>
-            <Skeleton className="w-24 h-8 rounded-md" />
-            <Skeleton className="w-24 h-8 rounded-md" />
-            <Skeleton className="w-24 h-8 rounded-md" />
-          </>
-        )}
-      </div>
+        <div className="flex items-center gap-4 mt-4">
+          {isCategoriesLoading && (
+            <>
+              <Skeleton className="w-24 h-8 rounded-md" />
+              <Skeleton className="w-24 h-8 rounded-md" />
+              <Skeleton className="w-24 h-8 rounded-md" />
+            </>
+          )}
+        </div>
 
         <div className="flex gap-4 mt-4">
           {/* Sorting buttons */}
@@ -87,7 +89,7 @@ function Products(props) {
     );
   }
 
-if (isProductsError || isCategoriesError) {
+  if (isProductsError || isCategoriesError) {
     return (
       <section className="px-8 py-8">
         <h2 className="text-4xl font-bold">Our Top Products</h2>
@@ -108,7 +110,7 @@ if (isProductsError || isCategoriesError) {
             Sort by Price: Descending
           </button>
         </div>
-         <div className="mt-4 text-center text-red-500">
+        <div className="mt-4 text-center text-red-500">
           <p className="text-lg font-semibold">
             Oops! Something went wrong while loading the data.
           </p>
@@ -116,8 +118,8 @@ if (isProductsError || isCategoriesError) {
             {`${productsError?.message || "Something went wrong while loading products."}`}
             <br />
             {`${categoriesError?.message || "Something went wrong while loading categories."}`}
-          </p>        
-          </div>
+          </p>
+        </div>
       </section>
     );
   }

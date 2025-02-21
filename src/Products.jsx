@@ -128,32 +128,38 @@ function Products(props) {
     <section className="px-8 py-8">
       <h2 className="text-4xl font-bold">Our Top Products</h2>
       <Separator className="mt-2" />
-      <div className="mt-4 flex items-center gap-4">
-        {[...categories, { _id: "ALL", name: "All" }].map((category) => (
-          <Tab
-            key={category._id}
-            _id={category._id}
-            selectedCategoryId={selectedCategoryId}
-            name={category.name}
-            onTabClick={handleTabClick}
-          />
-        ))}
+
+      {/* Category Tabs and Sorting Dropdown */}
+      <div className="flex flex-col items-center justify-between gap-4 mt-4 sm:flex-row">
+        {/* Category Tabs (Left-aligned) */}
+        <div className="flex flex-wrap justify-center w-full gap-2 sm:gap-4 sm:justify-start sm:w-auto">
+          {[...(categories ?? []), { _id: "ALL", name: "All" }].map(
+            (category) => (
+              <Tab
+                key={category._id}
+                _id={category._id}
+                selectedCategoryId={selectedCategoryId}
+                name={category.name}
+                onTabClick={handleTabClick}
+              />
+            )
+          )}
+        </div>
+
+        {/* Sorting Dropdown (Right-aligned) */}
+        <div className="flex justify-center w-full sm:w-auto sm:justify-end">
+          <select
+            onChange={(e) => setSortOrder(e.target.value)}
+            value={sortOrder || ""}
+            className="w-full px-3 py-1 text-gray-800 bg-gray-100 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 sm:w-auto"
+          >
+            <option value="">Sort by: Default</option>
+            <option value="asc">Price: Low to High</option>
+            <option value="desc">Price: High to Low</option>
+          </select>
+        </div>
       </div>
-      <div className="flex gap-4 mt-4">
-        {/* Sorting buttons */}
-        <button
-          onClick={handleSortAscending}
-          className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042]"
-        >
-          Sort by Price: Ascending
-        </button>
-        <button
-          onClick={handleSortDescending}
-          className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042] transition-transform"
-        >
-          Sort by Price: Descending
-        </button>
-      </div>
+
       <ProductCards products={sortedProducts} />
     </section>
   );

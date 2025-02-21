@@ -20,21 +20,36 @@ function ProductCard(props) {
   };
 
   return (
-    <Card>
-      <div className="relative p-4 rounded-lg h-80 bg-card">
-        <img src={props.image} className="block" />
+    <Card className="flex flex-col h-full overflow-hidden border border-gray-200 rounded-lg shadow-md">
+      {/* Product Image */}
+      <div className="relative flex items-center justify-center h-48 p-4 sm:h-64 md:h-80 bg-card">
+        <img
+          src={props.image}
+          alt={props.name}
+          className="object-contain w-full h-full"
+        />
       </div>
-      <div className="flex items-center justify-between px-4 mt-4">
-        <h2 className="text-2xl font-semibold">{props.name}</h2>
-        <span className="block text-lg font-medium">${props.price}</span>
-      </div>
-      <div className="px-4 mt-2">
-        <p className="text-sm">{props.description}</p>
-      </div>
-      <div className="p-4 mt-1">
-        <Button className="w-full" onClick={handleClick}>
-          Buy Now
-        </Button>
+
+      {/* Product Details */}
+      <div className="flex flex-col flex-grow gap-2 p-4">
+        <div className="flex items-start justify-between">
+          <h2 className="w-3/4 text-lg font-semibold truncate sm:text-xl line-clamp-2">
+            {props.name}
+          </h2>
+          <span className="text-base font-medium sm:text-lg">
+            ${props.price}
+          </span>
+        </div>
+        <p className="flex-grow text-xs sm:text-sm line-clamp-2">
+          {props.description}
+        </p>
+
+        {/* Add to Cart Button */}
+        <div className="w-full mt-2">
+          <Button className="w-full" onClick={handleClick}>
+            Add to Cart
+          </Button>
+        </div>
       </div>
     </Card>
   );

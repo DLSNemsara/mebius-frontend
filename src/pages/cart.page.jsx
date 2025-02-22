@@ -138,11 +138,13 @@ function CartPage() {
                       <span>${calculateSubtotal().toFixed(2)}</span>
                     </div>
                   </div>
-                  <Link to="/shop/checkout" className="block">
+                  <div className="mt-4">
                     <Button className="w-full" size="lg">
-                      Proceed to Checkout
+                      <Link to="/shop/checkout" className="block">
+                        Proceed to Checkout
+                      </Link>
                     </Button>
-                  </Link>
+                  </div>
                 </CardContent>
               </Card>
             </div>

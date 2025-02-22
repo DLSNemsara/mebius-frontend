@@ -16,12 +16,12 @@ function Navbar(props) {
   return (
     <nav className="flex items-center justify-between p-8 px-8">
       <div className="flex gap-x-16">
-        <a className="text-3xl font-semibold" href="/">
+        <Link className="text-3xl font-semibold" to="/">
           Mebius
-        </a>
+        </Link>
         <div className="flex items-center gap-4">
-          <a href="/">Home</a>
-          <a href="/shop">Shop</a>
+          <Link to="/">Home</Link>
+          <Link to="/shop">Shop</Link>
         </div>
       </div>
       <div className="flex items-center gap-4">

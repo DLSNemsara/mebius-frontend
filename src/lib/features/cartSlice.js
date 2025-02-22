@@ -70,9 +70,9 @@ export const cartSlice = createSlice({
 
       if (foundItem) {
         foundItem.quantity += 1;
-      } else {
-        state.value.push({ product, quantity: 1 });
+        return;
       }
+      state.value.push({ product, quantity: 1 });
 
       localStorage.setItem("cart", JSON.stringify(state.value)); // Save to localStorage
     },

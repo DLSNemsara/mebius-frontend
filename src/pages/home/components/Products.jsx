@@ -4,8 +4,19 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { useGetCategoriesQuery, useGetProductsQuery } from "@/lib/api";
+import React from "react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Check, ArrowUp, ArrowDown, Filter } from "lucide-react";
 
-function Products(props) {
+function Products() {
   const {
     data: products,
     isLoading: isProductsLoading,
@@ -21,34 +32,35 @@ function Products(props) {
   } = useGetCategoriesQuery();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState("ALL");
-  const [sortOrder, setSortOrder] = useState(null); // New state for sorting order
+  const [sortOrder, setSortOrder] = useState(null);
 
   const filteredProducts =
     selectedCategoryId === "ALL"
       ? (products ?? [])
-      : (products.filter(
+      : (products?.filter(
           (product) => product.categoryId === selectedCategoryId
         ) ?? []);
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortOrder === "asc") return parseFloat(a.price) - parseFloat(b.price);
     if (sortOrder === "desc") return parseFloat(b.price) - parseFloat(a.price);
-    return 0; // No sorting by default
+    return 0;
   });
 
   const handleTabClick = (_id) => {
     setSelectedCategoryId(_id);
   };
 
-  const handleSortAscending = () => {
-    setSortOrder("asc");
+  const sortOptions = [
+    { label: "Default", value: "", icon: Filter },
+    { label: "Price: Low to High", value: "asc", icon: ArrowUp },
+    { label: "Price: High to Low", value: "desc", icon: ArrowDown },
+  ];
+
+  const handleSort = (value) => {
+    setSortOrder(value);
   };
 
-  const handleSortDescending = () => {
-    setSortOrder("desc");
-  };
-
-  // Display loading spinner while fetching data
   if (isProductsLoading || isCategoriesLoading) {
     return (
       <section className="px-8 py-8">
@@ -63,22 +75,6 @@ function Products(props) {
             </>
           )}
         </div>
-
-        <div className="flex gap-4 mt-4">
-          {/* Sorting buttons */}
-          <button
-            onClick={handleSortAscending}
-            className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042]"
-          >
-            Sort by Price: Ascending
-          </button>
-          <button
-            onClick={handleSortDescending}
-            className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042] transition-transform"
-          >
-            Sort by Price: Descending
-          </button>
-        </div>
         <div className="grid grid-cols-4 gap-4 mt-4">
           <Skeleton className="h-80" />
           <Skeleton className="h-80" />
@@ -91,34 +87,37 @@ function Products(props) {
 
   if (isProductsError || isCategoriesError) {
     return (
-      <section className="px-8 py-8">
-        <h2 className="text-4xl font-bold">Our Top Products</h2>
+      <section className="px-8 py-8 text-center">
+        <h2 className="text-3xl font-semibold text-gray-800">
+          Something went wrong
+        </h2>
         <Separator className="mt-2" />
-        <div className="flex items-center gap-4 mt-4"></div>
-        <div className="flex gap-4 mt-4">
-          {/* Sorting buttons */}
-          <button
-            onClick={handleSortAscending}
-            className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042]"
-          >
-            Sort by Price: Ascending
-          </button>
-          <button
-            onClick={handleSortDescending}
-            className="px-3 py-1 text-white bg-[#505258] rounded-md hover:bg-[#3e4042] transition-transform"
-          >
-            Sort by Price: Descending
-          </button>
-        </div>
-        <div className="mt-4 text-center text-red-500">
-          <p className="text-lg font-semibold">
-            Oops! Something went wrong while loading the data.
+
+        <div className="max-w-md p-4 mx-auto mt-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm">
+          <p className="text-gray-700">
+            We couldn’t load the data. Please try again later.
           </p>
-          <p>
-            {`${productsError?.message || "Something went wrong while loading products."}`}
-            <br />
-            {`${categoriesError?.message || "Something went wrong while loading categories."}`}
-          </p>
+
+          {isProductsError && (
+            <p className="mt-2 text-sm text-gray-500">
+              Products error:{" "}
+              {productsError?.message || "Unable to load products."}
+            </p>
+          )}
+
+          {isCategoriesError && (
+            <p className="mt-1 text-sm text-gray-500">
+              Categories error:{" "}
+              {categoriesError?.message || "Unable to load categories."}
+            </p>
+          )}
+
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 mt-4 text-sm font-medium text-white transition-all bg-gray-900 rounded-md hover:bg-gray-800"
+          >
+            Try Again
+          </button>
         </div>
       </section>
     );
@@ -129,9 +128,8 @@ function Products(props) {
       <h2 className="text-4xl font-bold">Our Top Products</h2>
       <Separator className="mt-2" />
 
-      {/* Category Tabs and Sorting Dropdown */}
       <div className="flex flex-col items-center justify-between gap-4 mt-4 sm:flex-row">
-        {/* Category Tabs (Left-aligned) */}
+        {/* Category Tabs */}
         <div className="flex flex-wrap justify-center w-full gap-2 sm:gap-4 sm:justify-start sm:w-auto">
           {[...(categories ?? []), { _id: "ALL", name: "All" }].map(
             (category) => (
@@ -146,17 +144,44 @@ function Products(props) {
           )}
         </div>
 
-        {/* Sorting Dropdown (Right-aligned) */}
+        {/* Sorting Dropdown */}
         <div className="flex justify-center w-full sm:w-auto sm:justify-end">
-          <select
-            onChange={(e) => setSortOrder(e.target.value)}
-            value={sortOrder || ""}
-            className="w-full px-3 py-1 text-gray-800 bg-gray-100 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-200 sm:w-auto"
-          >
-            <option value="">Sort by: Default</option>
-            <option value="asc">Price: Low to High</option>
-            <option value="desc">Price: High to Low</option>
-          </select>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-[200px] justify-between">
+                <div className="flex items-center gap-2">
+                  {sortOptions.find((opt) => opt.value === sortOrder)?.icon &&
+                    React.createElement(
+                      sortOptions.find((opt) => opt.value === sortOrder).icon,
+                      { className: "w-4 h-4 text-muted-foreground" }
+                    )}
+                  <span>
+                    {sortOptions.find((opt) => opt.value === sortOrder)
+                      ?.label || "Sort by: Default"}
+                  </span>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {sortOptions.map((option) => (
+                <DropdownMenuItem
+                  key={option.value || "default"}
+                  onClick={() => handleSort(option.value)}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <option.icon className="w-4 h-4 text-muted-foreground" />
+                    <span>{option.label}</span>
+                  </div>
+                  {sortOrder === option.value && (
+                    <Check className="w-4 h-4 text-primary" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

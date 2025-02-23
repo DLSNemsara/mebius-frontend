@@ -23,7 +23,6 @@ const formSchema = z.object({
   zip_code: z.string().min(1),
   phone: z.string().refine(
     (value) => {
-      // This regex checks for a basic international phone number format
       return /^\+?[1-9]\d{1,14}$/.test(value);
     },
     {
@@ -44,24 +43,18 @@ const ShippingAddressForm = ({ cart }) => {
       phone: "",
     },
   });
-  const [createOrder, { isLoading, isError, data }] = useCreateOrderMutation();
+
   const navigate = useNavigate();
-  console.log(cart);
 
   function handleSubmit(values) {
-    createOrder({
-      items: cart,
-      shippingAddress: {
-        line_1: values.line_1,
-        line_2: values.line_2,
-        city: values.city,
-        state: values.state,
-        zip_code: values.zip_code,
-        phone: values.phone,
-      },
-    });
-    toast.success("Checkout successful");
-    navigate("/shop/payment");
+    try {
+      // Store shipping address in localStorage
+      localStorage.setItem("shippingAddress", JSON.stringify(values));
+      toast.success("Shipping details saved");
+      navigate("/shop/payment");
+    } catch (error) {
+      toast.error("Failed to save shipping details");
+    }
   }
 
   return (
@@ -115,7 +108,7 @@ const ShippingAddressForm = ({ cart }) => {
                 <FormItem>
                   <FormLabel>State/Province</FormLabel>
                   <FormControl>
-                    <Input placeholder="Wester Province" {...field} />
+                    <Input placeholder="Western Province" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -149,7 +142,7 @@ const ShippingAddressForm = ({ cart }) => {
             />
           </div>
           <div className="mt-4">
-            <Button type="submit">Proceed to Payment</Button>
+            <Button type="submit">Continue to Payment</Button>
           </div>
         </form>
       </Form>

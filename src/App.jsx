@@ -1,6 +1,6 @@
-import Hero from "./Hero";
-import Navbar from "./Navbar";
-import Products from "./Products";
+import Hero from "./pages/home/components/Hero";
+import Navbar from "./components/Navbar";
+import Products from "./pages/home/components/Products";
 
 function App() {
   const name = "Sinel Nemsara";

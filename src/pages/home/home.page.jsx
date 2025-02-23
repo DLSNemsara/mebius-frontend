@@ -1,5 +1,5 @@
-import Hero from "./../Hero";
-import Products from "./../Products";
+import Hero from "./components/Hero";
+import Products from "./components/Products";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 

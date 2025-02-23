@@ -3,10 +3,15 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { clearCart } from "@/lib/features/cartSlice";
 import { toast } from "sonner";
+import { Navigate } from "react-router-dom";
 
 function PaymentPage() {
   const cart = useSelector((state) => state.cart.value);
   const dispatch = useDispatch();
+
+  if (cart.length === 0) {
+    return <Navigate to="/" />;
+  }
   return (
     <main className="px-8">
       <h2 className="text-4xl font-bold">Review Your Order</h2>

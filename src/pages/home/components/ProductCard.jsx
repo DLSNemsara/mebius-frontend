@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart } from "./lib/features/cartSlice";
+import { addToCart } from "@/lib/features/cartSlice";
 
 function ProductCard(props) {
   const count = useSelector((state) => state.counter.value);
@@ -22,7 +22,7 @@ function ProductCard(props) {
   return (
     <Card className="flex flex-col h-full overflow-hidden border border-gray-200 rounded-lg shadow-md">
       {/* Product Image */}
-      <div className="relative flex items-center justify-center h-48 p-4 sm:h-64 md:h-80 bg-card">
+      <div className="relative flex items-center justify-center h-56 p-4 sm:h-72 md:h-96 bg-card">
         <img
           src={props.image}
           alt={props.name}

@@ -14,7 +14,7 @@ function Navbar(props) {
     return count;
   };
   return (
-    <nav className="flex items-center justify-between p-8 px-8">
+    <nav className="flex items-center justify-between px-8 py-8">
       <div className="flex gap-x-16">
         <Link className="text-3xl font-semibold" to="/">
           Mebius

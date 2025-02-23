@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useGetOrderQuery } from "@/lib/api";
-import { Link, useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router-dom";
 
 function CompletePage() {
   const [searchParams] = useSearchParams();
@@ -37,12 +37,24 @@ function CompletePage() {
         <p>Order ID: {data._id}</p>
         <p>Order Status: {data.paymentStatus}</p>
         <p className="mt-2 text-lg">Shipping Address</p>
-        <p>{data.addressId.line_1}</p>
+        {/* <p>{data.addressId.line_1}</p>
         <p>{data.addressId.line_2}</p>
         <p>{data.addressId.city}</p>
         <p>{data.addressId.state}</p>
         <p>{data.addressId.zip_code}</p>
-        <p>{data.addressId.phone}</p>
+        <p>{data.addressId.phone}</p> */}
+        {data.addressId ? (
+          <>
+            <p>{data.addressId.line_1}</p>
+            <p>{data.addressId.line_2}</p>
+            <p>{data.addressId.city}</p>
+            <p>{data.addressId.state}</p>
+            <p>{data.addressId.zip_code}</p>
+            <p>{data.addressId.phone}</p>
+          </>
+        ) : (
+          <p>No shipping address available.</p>
+        )}
       </div>
 
       <div className="mt-4">

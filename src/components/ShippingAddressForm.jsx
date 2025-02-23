@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useCreateOrderMutation } from "@/lib/api";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   line_1: z.string().min(1),
@@ -59,6 +60,7 @@ const ShippingAddressForm = ({ cart }) => {
         phone: values.phone,
       },
     });
+    toast.success("Checkout successful");
     navigate("/shop/payment");
   }
 

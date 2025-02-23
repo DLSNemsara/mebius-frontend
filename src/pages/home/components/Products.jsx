@@ -2,7 +2,7 @@ import ProductCards from "./ProductCards";
 import Tab from "./Tab";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
-import { Skeleton } from "./components/ui/skeleton";
+import { Skeleton } from "../../../components/ui/skeleton";
 import { useGetCategoriesQuery, useGetProductsQuery } from "@/lib/api";
 
 function Products(props) {

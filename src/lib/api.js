@@ -5,7 +5,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const Api = createApi({
   reducerPath: "Api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8000/api/", // Change this for production
+    // baseUrl: "http://localhost:8000/api/", // Change this for production
+    baseUrl: "https://mebius-backend-sinel.onrender.com/api/",
     prepareHeaders: async (headers, { getState }) => {
       const token = await window.Clerk?.session?.getToken(); // Avoids runtime error
 

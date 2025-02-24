@@ -6,10 +6,14 @@ import { Navigate, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Package, ArrowLeft, ShoppingCart } from "lucide-react";
+import { useCreateOrderMutation } from "@/lib/api";
+import { useNavigate } from "react-router-dom";
 
 function PaymentPage() {
   const cart = useSelector((state) => state.cart.value);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [createOrder] = useCreateOrderMutation();
 
   if (cart.length === 0) {
     return <Navigate to="/shop" />;
@@ -20,6 +24,97 @@ function PaymentPage() {
     0
   );
 
+  // const handlePlaceOrder = async () => {
+  //   try {
+  //     const shippingAddress = JSON.parse(
+  //       localStorage.getItem("shippingAddress")
+  //     );
+
+  //     // Modified order data structure to match CreateOrderDTO
+  //     const orderData = {
+  //       items: cart.map((item) => ({
+  //         product: {
+  //           _id: item.product._id,
+  //           name: item.product.name,
+  //           price: Number(item.product.price),
+  //           image: item.product.image || "",
+  //           description: item.product.description || "",
+  //         },
+  //         quantity: item.quantity,
+  //       })),
+  //       shippingAddress: {
+  //         line_1: shippingAddress.line_1,
+  //         line_2: shippingAddress.line_2,
+  //         city: shippingAddress.city,
+  //         state: shippingAddress.state,
+  //         zip_code: shippingAddress.zip_code,
+  //         phone: shippingAddress.phone,
+  //       },
+  //     };
+
+  //     console.log("Attempting to create order with data:", orderData);
+
+  //     const response = await createOrder(orderData).unwrap();
+
+  //     dispatch(clearCart());
+  //     localStorage.removeItem("shippingAddress");
+  //     toast.success("Order Placed Successfully");
+  //     navigate(`/shop/complete?orderId=${response._id}`);
+  //   } catch (error) {
+  //     console.error("Order creation error:", error);
+  //     toast.error(
+  //       `Failed to place order: ${error.data?.message || "Please try again"}`
+  //     );
+  //   }
+  // };
+
+  const handlePlaceOrder = async () => {
+    try {
+      const shippingAddress = JSON.parse(
+        localStorage.getItem("shippingAddress")
+      );
+
+      const orderData = {
+        items: cart.map((item) => ({
+          product: {
+            _id: item.product._id,
+            name: item.product.name,
+            price: Number(item.product.price),
+            image: item.product.image || "",
+            description: item.product.description || "",
+          },
+          quantity: item.quantity,
+        })),
+        shippingAddress: {
+          line_1: shippingAddress.line_1,
+          line_2: shippingAddress.line_2,
+          city: shippingAddress.city,
+          state: shippingAddress.state,
+          zip_code: shippingAddress.zip_code,
+          phone: shippingAddress.phone,
+        },
+      };
+
+      console.log("Attempting to create order with data:", orderData);
+
+      const response = await createOrder(orderData).unwrap();
+      console.log("Order created successfully:", response);
+
+      dispatch(clearCart());
+      localStorage.removeItem("shippingAddress");
+      toast.success("Order Placed Successfully");
+
+      // Add a small delay to ensure state updates are processed
+      setTimeout(() => {
+        navigate(`/shop/complete?orderId=${response._id}`);
+      }, 100);
+    } catch (error) {
+      console.error("Order creation error:", error);
+      toast.error(
+        `Failed to place order: ${error.data?.message || "Please try again"}`
+      );
+    }
+  };
   return (
     <main className="min-h-screen py-12 bg-gray-50">
       <div className="container max-w-4xl px-4 mx-auto">
@@ -99,10 +194,7 @@ function PaymentPage() {
               <Button
                 className="w-full mt-6"
                 size="lg"
-                onClick={() => {
-                  dispatch(clearCart());
-                  toast.success("Order Placed Successfully");
-                }}
+                onClick={handlePlaceOrder}
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Place Order

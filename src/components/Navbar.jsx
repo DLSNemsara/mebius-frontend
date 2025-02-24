@@ -1,9 +1,18 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Menu, User, Home, Package } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-function Navbar(props) {
+function Navbar() {
   const cart = useSelector((state) => state.cart.value);
 
   const getCartQuantity = () => {
@@ -13,37 +22,108 @@ function Navbar(props) {
     });
     return count;
   };
+
   return (
-    <nav className="flex items-center justify-between px-8 py-8">
-      <div className="flex gap-x-16">
-        <Link className="text-3xl font-semibold" to="/">
-          Mebius
-        </Link>
-        <div className="flex items-center gap-4">
-          <Link to="/">Home</Link>
-          <Link to="/shop">Shop</Link>
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <div>
-          <Link to="/shop/cart" className="relative flex items-center gap-4">
-            <p className="text-lg">{getCartQuantity()}</p>
-            <div className="flex items-center gap-2">
-              <ShoppingCart />
-              Cart
-            </div>
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex items-center justify-between h-16 px-4 mx-auto">
+        {/* Logo and Main Navigation */}
+        <div className="flex items-center gap-6 md:gap-8">
+          <Link
+            to="/"
+            className="text-xl font-semibold transition-colors hover:text-primary"
+          >
+            Mebius
           </Link>
-        </div>
-        <SignedOut>
-          <div className="flex items-center gap-4">
-            <Link to="/sign-in"> Sign In </Link>
-            <Link to="/sign-up"> Sign Up </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex md:items-center md:gap-6">
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-sm transition-colors hover:text-primary"
+            >
+              <Home className="w-4 h-4" />
+              Home
+            </Link>
+            <Link
+              to="/shop"
+              className="flex items-center gap-2 text-sm transition-colors hover:text-primary"
+            >
+              <Package className="w-4 h-4" />
+              Shop
+            </Link>
           </div>
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-          <Link to={"/account"}> Account </Link>
-        </SignedIn>
+        </div>
+
+        {/* Right Side Actions */}
+        <div className="flex items-center gap-4">
+          {/* Cart */}
+          <Link
+            to="/shop/cart"
+            className="relative flex items-center gap-2 p-2 transition-colors rounded-full hover:bg-accent"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            {getCartQuantity() > 0 && (
+              <span className="absolute flex items-center justify-center w-5 h-5 text-xs text-white rounded-full -top-1 -right-1 bg-primary">
+                {getCartQuantity()}
+              </span>
+            )}
+          </Link>
+
+          {/* Auth Buttons */}
+          <SignedOut>
+            <div className="hidden sm:flex sm:items-center sm:gap-4">
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/sign-in">Sign In</Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link to="/sign-up">Sign Up</Link>
+              </Button>
+            </div>
+          </SignedOut>
+
+          <SignedIn>
+            <div className="flex items-center gap-4">
+              <UserButton afterSignOutUrl="/" />
+              <Link
+                to="/account"
+                className="hidden p-2 transition-colors rounded-full md:flex hover:bg-accent"
+              >
+                <User className="w-5 h-5" />
+              </Link>
+            </div>
+          </SignedIn>
+
+          {/* Mobile Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="p-2 md:hidden">
+              <Menu className="w-5 h-5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>Navigation</DropdownMenuLabel>
+              <DropdownMenuItem asChild>
+                <Link to="/">Home</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/shop">Shop</Link>
+              </DropdownMenuItem>
+              <SignedOut>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/sign-in">Sign In</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/sign-up">Sign Up</Link>
+                </DropdownMenuItem>
+              </SignedOut>
+              <SignedIn>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/account">My Account</Link>
+                </DropdownMenuItem>
+              </SignedIn>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </nav>
   );

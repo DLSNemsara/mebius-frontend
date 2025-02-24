@@ -8,7 +8,6 @@ export const Api = createApi({
     baseUrl: "http://localhost:8000/api/", // Change this for production
     prepareHeaders: async (headers, { getState }) => {
       const token = await window.Clerk?.session?.getToken(); // Avoids runtime error
-      console.log("Auth Token:", token); // Debugging (remove in production)
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);

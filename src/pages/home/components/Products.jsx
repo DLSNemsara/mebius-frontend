@@ -131,7 +131,7 @@ function Products() {
       <div className="flex flex-col items-center justify-between gap-4 mt-4 sm:flex-row">
         {/* Category Tabs */}
         <div className="flex flex-wrap justify-center w-full gap-2 sm:gap-4 sm:justify-start sm:w-auto">
-          {[...(categories ?? []), { _id: "ALL", name: "All" }].map(
+          {[{ _id: "ALL", name: "All" }, ...(categories ?? [])].map(
             (category) => (
               <Tab
                 key={category._id}

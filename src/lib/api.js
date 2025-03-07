@@ -35,6 +35,10 @@ export const Api = createApi({
         body,
       }),
     }),
+    checkStock: builder.query({
+      query: ({ productId, quantity }) =>
+        `products/check-stock?productId=${productId}&quantity=${quantity}`,
+    }),
   }),
 });
 
@@ -44,4 +48,5 @@ export const {
   useGetCategoriesQuery,
   useCreateOrderMutation,
   useGetOrderQuery,
+  useCheckStockQuery,
 } = Api;

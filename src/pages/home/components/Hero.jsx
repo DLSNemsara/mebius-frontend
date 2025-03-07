@@ -11,7 +11,7 @@ function Hero() {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col justify-center gap-6 p-10 md:p-16"
+          className="flex flex-col gap-6 justify-center p-10 md:p-16"
         >
           <span className="inline-block rounded-full py-1 px-3 text-xs font-medium w-fit bg-[#febc26] text-gray-800">
             WEEKLY DISCOUNT
@@ -24,13 +24,13 @@ function Hero() {
             accessories, available at unbeatable prices.
           </p>
           <Button
-            className="px-6 py-3 text-lg font-medium transition-all shadow-md w-fit bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600"
+            className="px-6 py-3 text-lg font-medium bg-gradient-to-r from-green-400 to-blue-500 shadow-md transition-all w-fit hover:from-green-500 hover:to-blue-600"
             asChild
           >
             <Link to="/shop">Shop Now</Link>
           </Button>
           {/* <Button
-            className="px-6 py-3 text-lg font-medium transition-all w-fit bg-gradient-to-r from-green-400 to-blue-500 hover:scale-105 hover:shadow-xl hover:from-green-500 hover:to-blue-600"
+            className="px-6 py-3 text-lg font-medium bg-gradient-to-r from-green-400 to-blue-500 transition-all w-fit hover:scale-105 hover:shadow-xl hover:from-green-500 hover:to-blue-600"
             asChild
           >
             <Link to="/shop">Shop Now</Link>
@@ -64,7 +64,7 @@ export default Hero;
 //   return (
 //     <section className="px-8 py-8">
 //       <div className="grid grid-cols-2 rounded-md min-h-[60vh] bg-[#f4f9f5]">
-//         <div className="flex flex-col justify-center gap-4 p-16">
+//         <div className="flex flex-col gap-4 justify-center p-16">
 //           <span className="inline-block rounded-full py-1 px-2 text-xs w-fit bg-[#febc26]">
 //             WEEKLY DISCOUNT
 //           </span>

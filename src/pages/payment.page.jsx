@@ -24,50 +24,6 @@ function PaymentPage() {
     0
   );
 
-  // const handlePlaceOrder = async () => {
-  //   try {
-  //     const shippingAddress = JSON.parse(
-  //       localStorage.getItem("shippingAddress")
-  //     );
-
-  //     // Modified order data structure to match CreateOrderDTO
-  //     const orderData = {
-  //       items: cart.map((item) => ({
-  //         product: {
-  //           _id: item.product._id,
-  //           name: item.product.name,
-  //           price: Number(item.product.price),
-  //           image: item.product.image || "",
-  //           description: item.product.description || "",
-  //         },
-  //         quantity: item.quantity,
-  //       })),
-  //       shippingAddress: {
-  //         line_1: shippingAddress.line_1,
-  //         line_2: shippingAddress.line_2,
-  //         city: shippingAddress.city,
-  //         state: shippingAddress.state,
-  //         zip_code: shippingAddress.zip_code,
-  //         phone: shippingAddress.phone,
-  //       },
-  //     };
-
-  //     console.log("Attempting to create order with data:", orderData);
-
-  //     const response = await createOrder(orderData).unwrap();
-
-  //     dispatch(clearCart());
-  //     localStorage.removeItem("shippingAddress");
-  //     toast.success("Order Placed Successfully");
-  //     navigate(`/shop/complete?orderId=${response._id}`);
-  //   } catch (error) {
-  //     console.error("Order creation error:", error);
-  //     toast.error(
-  //       `Failed to place order: ${error.data?.message || "Please try again"}`
-  //     );
-  //   }
-  // };
-
   const handlePlaceOrder = async () => {
     try {
       const shippingAddress = JSON.parse(
@@ -116,15 +72,15 @@ function PaymentPage() {
     }
   };
   return (
-    <main className="min-h-screen py-12 bg-gray-50">
-      <div className="container max-w-4xl px-4 mx-auto">
-        <div className="flex items-center justify-between mb-8">
+    <main className="py-12 min-h-screen bg-gray-50">
+      <div className="container px-4 mx-auto max-w-4xl">
+        <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Review Order</h1>
           <Link
             to="/shop/cart"
             className="flex items-center text-sm text-muted-foreground hover:text-primary"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="mr-2 w-4 h-4" />
             Back to cart
           </Link>
         </div>
@@ -132,7 +88,7 @@ function PaymentPage() {
         <div className="grid gap-6">
           {/* Order Items Card */}
           <Card>
-            <CardHeader className="flex flex-row items-center gap-2">
+            <CardHeader className="flex flex-row gap-2 items-center">
               <Package className="w-5 h-5 text-primary" />
               <CardTitle>Order Items</CardTitle>
             </CardHeader>
@@ -140,8 +96,8 @@ function PaymentPage() {
               <div className="space-y-4">
                 {cart.map((item, index) => (
                   <div key={index}>
-                    <div className="flex items-center gap-4">
-                      <div className="w-20 h-20 overflow-hidden bg-gray-100 rounded-lg">
+                    <div className="flex gap-4 items-center">
+                      <div className="overflow-hidden w-20 h-20 bg-gray-100 rounded-lg">
                         <img
                           src={item.product.image || "/placeholder.svg"}
                           alt={item.product.name}
@@ -150,7 +106,7 @@ function PaymentPage() {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-medium">{item.product.name}</h3>
-                        <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                        <div className="flex gap-2 items-center mt-1 text-sm text-muted-foreground">
                           <span>${item.product.price.toFixed(2)} each</span>
                           <span>•</span>
                           <span>Qty: {item.quantity}</span>
@@ -192,11 +148,11 @@ function PaymentPage() {
               </div>
 
               <Button
-                className="w-full mt-6"
+                className="mt-6 w-full"
                 size="lg"
                 onClick={handlePlaceOrder}
               >
-                <ShoppingCart className="w-4 h-4 mr-2" />
+                <ShoppingCart className="mr-2 w-4 h-4" />
                 Place Order
               </Button>
             </CardContent>

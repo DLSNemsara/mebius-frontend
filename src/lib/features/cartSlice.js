@@ -27,10 +27,14 @@ export const cartSlice = createSlice({
       );
 
       if (foundItem) {
+        // Check if adding one more would exceed stock
+        if (foundItem.quantity >= product.stock) {
+          return;
+        }
         foundItem.quantity += 1;
-        return;
+      } else {
+        state.value.push({ product, quantity: 1 });
       }
-      state.value.push({ product, quantity: 1 });
 
       localStorage.setItem("cart", JSON.stringify(state.value)); // Save to localStorage
     },
@@ -38,11 +42,10 @@ export const cartSlice = createSlice({
       const { productId, quantity } = action.payload;
       const item = state.value.find((item) => item.product._id === productId);
 
-      if (item) {
+      if (item && quantity <= item.product.stock) {
         item.quantity = quantity;
+        localStorage.setItem("cart", JSON.stringify(state.value)); // Save to localStorage
       }
-
-      localStorage.setItem("cart", JSON.stringify(state.value)); // Save to localStorage
     },
     removeFromCart: (state, action) => {
       state.value = state.value.filter(
@@ -64,45 +67,3 @@ export const { addToCart, updateQuantity, removeFromCart, clearCart } =
 
 // Export reducer
 export default cartSlice.reducer;
-
-// import { createSlice } from "@reduxjs/toolkit";
-
-// const initialState = {
-//   value: [],
-// };
-
-// export const cartSlice = createSlice({
-//   name: "cart",
-//   initialState,
-//   reducers: {
-//     addToCart: (state, action) => {
-//       const product = action.payload;
-//       const foundItem = state.value.find(
-//         (item) => item.product._id === product._id
-//       );
-//       if (foundItem) {
-//         foundItem.quantity += 1;
-//       } else {
-//         state.value.push({ product, quantity: 1 });
-//       }
-//     },
-//     updateQuantity: (state, action) => {
-//       const { productId, quantity } = action.payload;
-//       const item = state.value.find((item) => item.product._id === productId);
-//       if (item) {
-//         item.quantity = quantity;
-//       }
-//     },
-//     removeFromCart: (state, action) => {
-//       state.value = state.value.filter(
-//         (item) => item.product._id !== action.payload
-//       );
-//     },
-//   },
-// });
-
-// // Export actions
-// export const { addToCart, updateQuantity, removeFromCart } = cartSlice.actions;
-
-// // Export reducer
-// export default cartSlice.reducer;

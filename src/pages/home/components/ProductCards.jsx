@@ -13,6 +13,8 @@ function ProductCards(props) {
             price={product.price}
             image={product.image}
             description={product.description}
+            stock={product.stock}
+            isAvailable={product.isAvailable}
           />
         );
       })}

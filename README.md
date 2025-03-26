@@ -42,6 +42,10 @@ To get a local copy up and running, follow these steps:
     npm start
     ```
 
+## Backend Repository
+
+The backend code for this project can be found in the [mebius-backend repository](https://github.com/DLSNemsara/mebius-backend).
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and create a pull request with your changes.

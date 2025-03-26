@@ -18,7 +18,6 @@ This repository contains the frontend code for the Mebius eCommerce project. The
 - Node.js for the server environment
 - Redux for state management
 - React Router for navigation
-- Axios for API calls
 - Tailwind CSS for styling
 
 ## Getting Started

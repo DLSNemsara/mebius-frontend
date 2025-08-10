@@ -8,7 +8,7 @@ import {
   Heart,
   Settings,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +26,7 @@ function Navbar() {
   const wishlistCount = useSelector(
     (state) => state.wishlist?.items?.length || 0
   );
+  const location = useLocation();
 
   const getCartQuantity = () => {
     let count = 0;
@@ -33,6 +34,16 @@ function Navbar() {
       count += item.quantity;
     });
     return count;
+  };
+
+  const handleHomeClick = () => {
+    if (location.pathname === "/") {
+      // If already on home page, refresh it
+      window.location.reload();
+    } else {
+      // If on other page, navigate to home
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -49,13 +60,13 @@ function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:gap-6">
-            <Link
-              to="/"
+            <button
+              onClick={handleHomeClick}
               className="flex gap-2 items-center text-sm transition-colors hover:text-primary"
             >
               <Home className="w-4 h-4" />
               Home
-            </Link>
+            </button>
             <Link
               to="/shop"
               className="flex gap-2 items-center text-sm transition-colors hover:text-primary"

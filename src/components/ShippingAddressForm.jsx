@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { useCreateOrderMutation } from "@/lib/api";
 import { toast } from "sonner";
+import { forwardRef, useImperativeHandle } from "react";
 
 const formSchema = z.object({
   line_1: z.string().min(1),
@@ -31,7 +31,7 @@ const formSchema = z.object({
   ),
 });
 
-const ShippingAddressForm = ({ cart, paymentMethod }) => {
+const ShippingAddressForm = forwardRef(({ paymentMethod }, ref) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,13 +46,27 @@ const ShippingAddressForm = ({ cart, paymentMethod }) => {
 
   const navigate = useNavigate();
 
+  // Expose form submission method to parent component
+  useImperativeHandle(ref, () => ({
+    submit: async () => {
+      // Trigger validation first to get current state
+      const isValid = await form.trigger();
+
+      if (isValid) {
+        form.handleSubmit(handleSubmit)();
+      } else {
+        toast.error("Please fill in all required shipping details");
+      }
+    },
+  }));
+
   function handleSubmit(values) {
     try {
       // Store shipping address in localStorage
       localStorage.setItem("shippingAddress", JSON.stringify(values));
       toast.success("Shipping details saved");
       navigate("/shop/payment", { state: { paymentMethod } });
-    } catch (error) {
+    } catch {
       toast.error("Failed to save shipping details");
     }
   }
@@ -148,6 +162,8 @@ const ShippingAddressForm = ({ cart, paymentMethod }) => {
       </Form>
     </div>
   );
-};
+});
+
+ShippingAddressForm.displayName = "ShippingAddressForm";
 
 export default ShippingAddressForm;

@@ -10,13 +10,15 @@ import {
   DollarSign,
 } from "lucide-react";
 import ShippingAddressForm from "@/components/ShippingAddressForm";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 function CheckoutPage() {
   const cart = useSelector((state) => state.cart.value);
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const formRef = useRef(null);
 
   if (cart.length === 0) {
     return <Navigate to="/shop" />;
@@ -29,6 +31,15 @@ function CheckoutPage() {
 
   const handlePaymentMethodChange = (value) => {
     setPaymentMethod(value);
+  };
+
+  const handleContinueToPayment = () => {
+    // Trigger the form submission to save shipping details first
+    if (formRef.current) {
+      formRef.current.submit();
+    } else {
+      toast.error("Please fill in shipping details first");
+    }
   };
 
   return (
@@ -57,6 +68,7 @@ function CheckoutPage() {
                 <ShippingAddressForm
                   cart={cart}
                   paymentMethod={paymentMethod}
+                  ref={formRef}
                 />
               </CardContent>
             </Card>
@@ -100,7 +112,7 @@ function CheckoutPage() {
                   <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <p className="text-sm text-blue-800">
                       Your payment will be processed securely through Stripe.
-                      You'll be redirected to complete your payment after
+                      You&apos;ll be redirected to complete your payment after
                       confirming your order.
                     </p>
                   </div>
@@ -172,13 +184,12 @@ function CheckoutPage() {
                   </div>
 
                   <div className="pt-4">
-                    <Link
-                      to="/shop/payment"
-                      state={{ paymentMethod }}
+                    <button
+                      onClick={handleContinueToPayment}
                       className="w-full inline-flex justify-center items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
                     >
                       Continue to Payment
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </CardContent>

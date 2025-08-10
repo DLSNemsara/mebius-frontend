@@ -148,6 +148,10 @@ The frontend is deployed on **Netlify**:
 - Environment variable configuration
 - CDN distribution for global performance
 
+## Backend Repository
+
+The backend code for this project can be found in the [mebius-backend repository](https://github.com/DLSNemsara/mebius-backend).
+
 ## Contributing
 
 1. Fork the repository
@@ -167,3 +171,4 @@ For any inquiries or feedback, please contact us at [sinelnemsara19@gmail.com](m
 ---
 
 **Mebius** - Modern E-commerce Platform
+

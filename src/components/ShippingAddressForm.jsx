@@ -31,7 +31,7 @@ const formSchema = z.object({
   ),
 });
 
-const ShippingAddressForm = ({ cart }) => {
+const ShippingAddressForm = ({ cart, paymentMethod }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,7 +51,7 @@ const ShippingAddressForm = ({ cart }) => {
       // Store shipping address in localStorage
       localStorage.setItem("shippingAddress", JSON.stringify(values));
       toast.success("Shipping details saved");
-      navigate("/shop/payment");
+      navigate("/shop/payment", { state: { paymentMethod } });
     } catch (error) {
       toast.error("Failed to save shipping details");
     }
@@ -142,7 +142,7 @@ const ShippingAddressForm = ({ cart }) => {
             />
           </div>
           <div className="mt-4">
-            <Button type="submit">Continue to Payment</Button>
+            <Button type="submit">Save Shipping Details</Button>
           </div>
         </form>
       </Form>

@@ -5,7 +5,7 @@ function Tab(props) {
 
   if (props._id === props.selectedCategoryId) {
     return (
-      <button className="border bg-[#edeef1] px-2 py-1 rounded-md">
+      <button className="px-4 py-2 font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-md transition-all duration-300 transform hover:shadow-lg hover:scale-105">
         {props.name}
       </button>
     );
@@ -14,7 +14,7 @@ function Tab(props) {
   return (
     <button
       onClick={handleClick}
-      className="border border-[#edeef1] px-2 py-1 rounded-md"
+      className="px-4 py-2 font-medium text-gray-700 bg-white rounded-full border border-gray-200 shadow-sm transition-all duration-300 transform hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 hover:scale-105 hover:shadow-md"
     >
       {props.name}
     </button>

@@ -11,8 +11,10 @@ function ProductCards(props) {
             _id={product._id}
             name={product.name}
             price={product.price}
-            image={product.image}
+            images={product.images}
+            image={product.image} // Fallback for legacy products
             description={product.description}
+            shortDescription={product.shortDescription}
             stock={product.stock}
             isAvailable={product.isAvailable}
           />

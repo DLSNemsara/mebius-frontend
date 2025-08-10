@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useGetOrderQuery } from "@/lib/api";
 import { Link, useSearchParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   CheckCircle2,
@@ -20,8 +20,8 @@ function CompletePage() {
 
   if (isLoading) {
     return (
-      <main className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="flex items-center gap-2 text-muted-foreground">
+      <main className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="flex gap-2 items-center text-muted-foreground">
           <Loader2 className="w-6 h-6 animate-spin" />
           <p>Loading order details...</p>
         </div>
@@ -35,8 +35,8 @@ function CompletePage() {
   );
 
   return (
-    <main className="min-h-screen py-12 bg-gray-50">
-      <div className="container max-w-3xl px-4 mx-auto">
+    <main className="py-12 min-h-screen bg-gray-50">
+      <div className="container px-4 mx-auto max-w-3xl">
         {/* Success Header */}
         <div className="mb-8 text-center">
           <div className="flex justify-center mb-4">
@@ -52,8 +52,8 @@ function CompletePage() {
           {/* Order Status Card */}
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center flex-1 gap-2">
+              <div className="flex gap-4 items-center text-sm">
+                <div className="flex flex-1 gap-2 items-center">
                   <Clock className="w-5 h-5 text-primary" />
                   <div>
                     <p className="font-medium">Order Status</p>
@@ -62,7 +62,7 @@ function CompletePage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center flex-1 gap-2">
+                <div className="flex flex-1 gap-2 items-center">
                   <ShoppingBag className="w-5 h-5 text-primary" />
                   <div>
                     <p className="font-medium">Payment Method</p>
@@ -76,24 +76,61 @@ function CompletePage() {
           {/* Order Details Card */}
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex gap-2 items-center mb-6">
                 <Package className="w-5 h-5 text-primary" />
                 <h2 className="text-xl font-semibold">Order Details</h2>
               </div>
 
               <div className="space-y-4">
                 {data.items.map((item, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <div className="w-20 h-20 overflow-hidden bg-gray-100 rounded-lg">
+                  <div key={index} className="flex gap-4 items-center">
+                    <div className="overflow-hidden w-20 h-20 bg-gray-100 rounded-lg">
                       <img
-                        src={item.product.image || "/placeholder.svg"}
+                        src={
+                          item.product.images?.[0] ||
+                          item.product.image ||
+                          "/placeholder.svg"
+                        }
                         alt={item.product.name}
                         className="object-cover w-full h-full"
+                        onError={(e) => {
+                          // Dynamic fallback system for image loading issues
+                          const currentSrc = e.target.src;
+
+                          // Extract filename and extension
+                          const urlParts = currentSrc.split("/");
+                          const filename = urlParts[urlParts.length - 1];
+                          const [name, ext] = filename.split(".");
+                          const basePath = currentSrc.replace(filename, "");
+
+                          // Try multiple fallback strategies in order
+                          const fallbackStrategies = [
+                            `${name}-1.${ext}`, // product-name-1.ext
+                            `${name}_1.${ext}`, // product-name_1.ext
+                            `${name}_2.${ext}`, // product-name_2.ext
+                            filename.replace(/-/g, "_"), // Replace dashes with underscores
+                            filename.toLowerCase(), // Try lowercase
+                          ];
+
+                          // Try each fallback strategy
+                          let attemptCount = e.target.dataset.attemptCount || 0;
+                          attemptCount = parseInt(attemptCount);
+
+                          if (attemptCount < fallbackStrategies.length) {
+                            const nextFallback =
+                              fallbackStrategies[attemptCount];
+                            e.target.dataset.attemptCount = attemptCount + 1;
+                            e.target.src = basePath + nextFallback;
+                            return;
+                          }
+
+                          e.target.src = "/placeholder.svg";
+                        }}
                       />
                     </div>
                     <div className="flex-1">
                       <p className="font-medium">{item.product.name}</p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="flex gap-2 items-center text-sm text-muted-foreground">
                         <span>${item.product.price.toFixed(2)} each</span>
                         <span>•</span>
                         <span>Qty: {item.quantity}</span>
@@ -130,7 +167,7 @@ function CompletePage() {
           {data.addressId && (
             <Card>
               <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex gap-2 items-center mb-4">
                   <MapPin className="w-5 h-5 text-primary" />
                   <h2 className="text-xl font-semibold">Delivery Address</h2>
                 </div>
@@ -148,17 +185,17 @@ function CompletePage() {
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col justify-center gap-4 pt-4 sm:flex-row">
+          <div className="flex flex-col gap-4 justify-center pt-4 sm:flex-row">
             <Button asChild size="lg" variant="outline">
               <Link to="/account/orders" className="flex items-center">
                 View Order History
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
             </Button>
             <Button asChild size="lg">
               <Link to="/shop" className="flex items-center">
                 Continue Shopping
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
             </Button>
           </div>

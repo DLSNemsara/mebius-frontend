@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useGetProductQuery, useCheckStockQuery } from "@/lib/api";
-import ProductDetails from "./components/productDetails";
+import ProductDetails from "./components/productDetails.jsx";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
